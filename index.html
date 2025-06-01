@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Test de Riesgo Cardiovascular - Vital Extension</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
@@ -14,7 +14,6 @@
       padding: 0;
     }
     .container {
-      width: 100%;
       max-width: 800px;
       margin: 40px auto;
       padding: 30px;
@@ -75,6 +74,10 @@
       margin-top: 30px;
       text-align: center;
       font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
     }
     .badge {
       display: inline-block;
@@ -86,18 +89,9 @@
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
       margin-top: 10px;
     }
-    .green {
-      background-color: #DFF5E1;
-      color: #2E7D32;
-    }
-    .orange {
-      background-color: #FFF3E0;
-      color: #EF6C00;
-    }
-    .red {
-      background-color: #FFEBEE;
-      color: #C62828;
-    }
+    .green { background-color: #DFF5E1; color: #2E7D32; }
+    .orange { background-color: #FFF3E0; color: #EF6C00; }
+    .red { background-color: #FFEBEE; color: #C62828; }
     .message {
       font-size: 18px;
       margin-top: 30px;
@@ -105,7 +99,7 @@
       color: #333;
       line-height: 1.6;
     }
-    .evidence {
+    .evidence, .disclaimer {
       margin-top: 50px;
       padding-top: 30px;
       border-top: 1px solid #ddd;
@@ -117,66 +111,67 @@
       color: #1E5B7C;
       text-decoration: none;
     }
+    #loading {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+      font-style: italic;
+    }
+    #cta, #lead-magnet {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.8s ease-in;
+      margin-top: 30px;
+      text-align: center;
+    }
+    #lead-magnet input {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      width: 60%;
+      margin-top: 10px;
+    }
     @media (max-width: 600px) {
-      .container {
-        padding: 20px;
-      }
+      .container { padding: 20px; }
+      #lead-magnet input { width: 90%; }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Test de Riesgo Cardiovascular <small>powered by VitalExtension</small></h1>
-    
     <form id="riskForm">
-      <div class="question">
-        <label for="age">Edad:</label>
-        <input type="number" id="age" required>
-      </div>
-      <div class="question">
-        <label for="sex">Sexo:</label>
-        <select id="sex" required>
-          <option value="male">Masculino</option>
-          <option value="female">Femenino</option>
-        </select>
-      </div>
-      <div class="question">
-        <label for="systolic">Presión arterial sistólica (mmHg):</label>
-        <input type="number" id="systolic" required>
-      </div>
-      <div class="question">
-        <label for="diastolic">Presión arterial diastólica (mmHg):</label>
-        <input type="number" id="diastolic" required>
-      </div>
-      <div class="question">
-        <label for="cholesterol">Colesterol total (mg/dL):</label>
-        <input type="number" id="cholesterol" required>
-      </div>
-      <div class="question">
-        <label for="hdl">Colesterol HDL (mg/dL):</label>
-        <input type="number" id="hdl" required>
-      </div>
-      <div class="question">
-        <label for="smoker">¿Es fumador?</label>
-        <select id="smoker" required>
-          <option value="yes">Sí</option>
-          <option value="no">No</option>
-        </select>
-      </div>
-      <div class="question">
-        <label for="diabetes">¿Tiene diabetes?</label>
-        <select id="diabetes" required>
-          <option value="yes">Sí</option>
-          <option value="no">No</option>
-        </select>
-      </div>
+      <div class="question"><label for="age">Edad:</label><input type="number" id="age" required></div>
+      <div class="question"><label for="sex">Sexo:</label><select id="sex" required><option value="">Seleccione</option><option value="male">Masculino</option><option value="female">Femenino</option></select></div>
+      <div class="question"><label for="systolic">Presión arterial sistólica (mmHg):</label><input type="number" id="systolic" required></div>
+      <div class="question"><label for="diastolic">Presión arterial diastólica (mmHg):</label><input type="number" id="diastolic" required></div>
+      <div class="question"><label for="cholesterol">Colesterol total (mg/dL):</label><input type="number" id="cholesterol" required></div>
+      <div class="question"><label for="hdl">Colesterol HDL (mg/dL):</label><input type="number" id="hdl" required></div>
+      <div class="question"><label for="smoker">¿Es fumador?</label><select id="smoker" required><option value="">Seleccione</option><option value="yes">Sí</option><option value="no">No</option></select></div>
+      <div class="question"><label for="diabetes">¿Tiene diabetes?</label><select id="diabetes" required><option value="">Seleccione</option><option value="yes">Sí</option><option value="no">No</option></select></div>
       <button type="button" class="btn" onclick="calculateRisk()">Calcular riesgo</button>
-      <div id="output" style="margin-top: 30px;">
+    </form>
+
+    <div id="loading">Calculando riesgo...</div>
+
+    <div id="output">
       <div class="result" id="result"></div>
       <div class="badge" id="badge"></div>
       <div class="message" id="message"></div>
+      <div id="cta">
+        <a href="https://www.vitalextension.com/servicios/" target="_blank" class="btn">Mejorar mi salud con VitalExtension</a>
+      </div>
+      <div id="lead-magnet">
+        <p><strong>¿Quieres recibir una guía gratuita para reducir tu riesgo?</strong></p>
+        <input type="email" placeholder="Déjanos tu mejor email">
+      
+<p style="font-size: 15px; color: #777; margin-top: 10px;">
+  ⚖️ <strong>Compromiso VitalExtension:</strong> Usaremos tu email solo para enviarte tu guía gratuita y contenido valioso sobre longevidad. Nunca enviaremos spam ni compartiremos tus datos.
+</p>
+
     </div>
-  </form>
+
     <div class="evidence">
       <h3>Este test se basa en la fórmula de Framingham</h3>
       <p>Una herramienta validada internacionalmente para estimar el riesgo cardiovascular a 10 años.</p>
@@ -186,55 +181,94 @@
         <li><a href="https://www.revespcardiol.org/es-factores-riesgo-cardiovascular-perspectivas-derivadas-articulo-13116658">Framingham Heart Study en Revista Española de Cardiología</a></li>
       </ul>
     </div>
+
+    <div class="disclaimer">
+      <p><strong>Nota:</strong> Este test no sustituye un diagnóstico médico. Se basa en la fórmula de Framingham, pero tu salud requiere una evaluación personalizada.</p>
+    </div>
   </div>
+
   <script>
     function calculateRisk() {
-      const age = parseInt(document.getElementById("age").value);
-      const sex = document.getElementById("sex").value;
-      const systolic = parseInt(document.getElementById("systolic").value);
-      const diastolic = parseInt(document.getElementById("diastolic").value);
-      const cholesterol = parseInt(document.getElementById("cholesterol").value);
-      const hdl = parseInt(document.getElementById("hdl").value);
-      const smoker = document.getElementById("smoker").value;
-      const diabetes = document.getElementById("diabetes").value;
+      const requiredFields = ['age', 'sex', 'systolic', 'diastolic', 'cholesterol', 'hdl', 'smoker', 'diabetes'];
+      let valid = true;
+      requiredFields.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el.value) {
+          el.style.borderColor = 'red';
+          el.reportValidity();
+          valid = false;
+        } else {
+          el.style.borderColor = '#ccc';
+        }
+      });
+      if (!valid) return;
 
-      let riskScore = 0;
+      document.getElementById("loading").style.display = "block";
+      setTimeout(() => {
+        document.getElementById("loading").style.display = "none";
 
-      if (age >= 45) { riskScore += 1; }
-      if (sex === "male") { riskScore += 1; }
-      if (systolic >= 140) { riskScore += 2; } else if (systolic >= 130) { riskScore += 1; }
-      if (diastolic >= 90) { riskScore += 2; } else if (diastolic >= 80) { riskScore += 1; }
-      if (cholesterol >= 240) { riskScore += 2; } else if (cholesterol >= 200) { riskScore += 1; }
-      if (hdl < 40) { riskScore += 2; } else if (hdl < 60) { riskScore += 1; }
-      if (smoker === "yes") { riskScore += 2; }
-      if (diabetes === "yes") { riskScore += 2; }
+        const age = parseInt(document.getElementById("age").value);
+        const sex = document.getElementById("sex").value;
+        const systolic = parseInt(document.getElementById("systolic").value);
+        const diastolic = parseInt(document.getElementById("diastolic").value);
+        const cholesterol = parseInt(document.getElementById("cholesterol").value);
+        const hdl = parseInt(document.getElementById("hdl").value);
+        const smoker = document.getElementById("smoker").value;
+        const diabetes = document.getElementById("diabetes").value;
 
-      let result = "";
-      let badgeClass = "";
-      let message = "";
+        let riskScore = 0;
+        if (age >= 45) riskScore += 1;
+        if (sex === "male") riskScore += 1;
+        if (systolic >= 140) riskScore += 2; else if (systolic >= 130) riskScore += 1;
+        if (diastolic >= 90) riskScore += 2; else if (diastolic >= 80) riskScore += 1;
+        if (cholesterol >= 240) riskScore += 2; else if (cholesterol >= 200) riskScore += 1;
+        if (hdl < 40) riskScore += 2; else if (hdl < 60) riskScore += 1;
+        if (smoker === "yes") riskScore += 2;
+        if (diabetes === "yes") riskScore += 2;
 
-      if (riskScore <= 3) {
-        result = "Riesgo bajo";
-        badgeClass = "green";
-        message = "¡Felicidades! Estás en el camino correcto, pero recuerda que un riesgo bajo no significa que no puedas mejorar aún más.";
-      } else if (riskScore <= 6) {
-        result = "Riesgo moderado";
-        badgeClass = "orange";
-        message = "Tu riesgo cardiovascular es moderado. Es hora de hacer cambios. En VitalExtension podemos ayudarte.";
-      } else {
-        result = "Riesgo alto";
-        badgeClass = "red";
-        message = "Un riesgo alto indica que debes actuar ya. En VitalExtension trabajamos contigo para reducirlo con ciencia de vanguardia.";
-      }
+        let resultText = "", badgeClass = "", message = "", icon = "", percent = "";
+        if (riskScore <= 3) {
+          resultText = "Riesgo bajo";
+          badgeClass = "green";
+          icon = "✅";
+          percent = "7%";
+          message = "¡Felicidades! Estás en el camino correcto, pero recuerda que un riesgo bajo no significa que no puedas mejorar aún más.";
+        } else if (riskScore <= 6) {
+          resultText = "Riesgo moderado";
+          badgeClass = "orange";
+          icon = "⚠️";
+          percent = "14%";
+          message = "Tu riesgo cardiovascular es moderado. Es hora de hacer cambios. En VitalExtension podemos ayudarte.";
+        } else {
+          resultText = "Riesgo alto";
+          badgeClass = "red";
+          icon = "❌";
+          percent = "25%";
+          message = "Un riesgo alto indica que debes actuar ya. En VitalExtension trabajamos contigo para reducirlo con ciencia de vanguardia.";
+        }
 
-      document.getElementById("result").textContent = `Su riesgo cardiovascular es: ${result}`;
-      document.getElementById("badge").className = `badge ${badgeClass}`;
-      document.getElementById("badge").textContent = result;
-      document.getElementById("message").textContent = message;
+        document.getElementById("result").innerHTML = `${icon} Su riesgo cardiovascular es: ${resultText}`;
+        document.getElementById("badge").className = `badge ${badgeClass}`;
+        document.getElementById("badge").textContent = resultText;
+        document.getElementById("message").textContent = message;
+        document.getElementById("output").scrollIntoView({ behavior: 'smooth' });
+        document.getElementById("cta").style.display = "block";
+        document.getElementById("lead-magnet").style.display = "block";
+        setTimeout(() => {
+          document.getElementById("cta").style.opacity = "1";
+          document.getElementById("lead-magnet").style.opacity = "1";
+        }, 100);
 
-      // Scroll automático al resultado
-      document.getElementById("output").scrollIntoView({ behavior: 'smooth' });
+      }, 1000);
     }
-  </script>
+  
+document.querySelector('#lead-magnet input').addEventListener('input', function(e) {
+  const email = e.target.value;
+  const downloadBtn = document.getElementById('downloadBtn');
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  downloadBtn.style.display = emailValid ? 'block' : 'none';
+});
+
+</script>
 </body>
 </html>
