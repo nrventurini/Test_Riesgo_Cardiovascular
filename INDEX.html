@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test de Riesgo Cardiovascular - Vital Extension</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f4f4f9;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      width: 100%;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 30px;
+      background-color: #fff;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      border-radius: 16px;
+    }
+    h1 {
+      color: #1E5B7C;
+      text-align: center;
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    h1 small {
+      display: block;
+      font-size: 16px;
+      color: #888;
+      margin-top: 4px;
+    }
+    .question {
+      margin-bottom: 30px;
+    }
+    .question label {
+      display: block;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .question input,
+    .question select {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      background-color: #1E5B7C;
+      color: white;
+      font-size: 18px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: background 0.3s ease;
+      margin-top: 20px;
+    }
+    .btn:hover {
+      background-color: #125C8E;
+    }
+    .result {
+      font-size: 26px;
+      margin-top: 30px;
+      text-align: center;
+      font-weight: 700;
+    }
+    .badge {
+      display: inline-block;
+      padding: 12px 20px;
+      border-radius: 24px;
+      font-weight: bold;
+      font-size: 16px;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      margin-top: 10px;
+    }
+    .green {
+      background-color: #DFF5E1;
+      color: #2E7D32;
+    }
+    .orange {
+      background-color: #FFF3E0;
+      color: #EF6C00;
+    }
+    .red {
+      background-color: #FFEBEE;
+      color: #C62828;
+    }
+    .message {
+      font-size: 18px;
+      margin-top: 30px;
+      text-align: center;
+      color: #333;
+      line-height: 1.6;
+    }
+    .evidence {
+      margin-top: 50px;
+      padding-top: 30px;
+      border-top: 1px solid #ddd;
+      font-size: 16px;
+      text-align: center;
+      color: #555;
+    }
+    .evidence a {
+      color: #1E5B7C;
+      text-decoration: none;
+    }
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Test de Riesgo Cardiovascular <small>powered by VitalExtension</small></h1>
+    
+    <form id="riskForm">
+      <div class="question">
+        <label for="age">Edad:</label>
+        <input type="number" id="age" required>
+      </div>
+      <div class="question">
+        <label for="sex">Sexo:</label>
+        <select id="sex" required>
+          <option value="male">Masculino</option>
+          <option value="female">Femenino</option>
+        </select>
+      </div>
+      <div class="question">
+        <label for="systolic">Presión arterial sistólica (mmHg):</label>
+        <input type="number" id="systolic" required>
+      </div>
+      <div class="question">
+        <label for="diastolic">Presión arterial diastólica (mmHg):</label>
+        <input type="number" id="diastolic" required>
+      </div>
+      <div class="question">
+        <label for="cholesterol">Colesterol total (mg/dL):</label>
+        <input type="number" id="cholesterol" required>
+      </div>
+      <div class="question">
+        <label for="hdl">Colesterol HDL (mg/dL):</label>
+        <input type="number" id="hdl" required>
+      </div>
+      <div class="question">
+        <label for="smoker">¿Es fumador?</label>
+        <select id="smoker" required>
+          <option value="yes">Sí</option>
+          <option value="no">No</option>
+        </select>
+      </div>
+      <div class="question">
+        <label for="diabetes">¿Tiene diabetes?</label>
+        <select id="diabetes" required>
+          <option value="yes">Sí</option>
+          <option value="no">No</option>
+        </select>
+      </div>
+      <button type="button" class="btn" onclick="calculateRisk()">Calcular riesgo</button>
+      <div id="output" style="margin-top: 30px;">
+      <div class="result" id="result"></div>
+      <div class="badge" id="badge"></div>
+      <div class="message" id="message"></div>
+    </div>
+  </form>
+    <div class="evidence">
+      <h3>Este test se basa en la fórmula de Framingham</h3>
+      <p>Una herramienta validada internacionalmente para estimar el riesgo cardiovascular a 10 años.</p>
+      <p>Más información en los siguientes estudios:</p>
+      <ul>
+        <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3673738/" target="_blank">Validation of the Framingham Cardiovascular Risk Score</a></li>
+        <li><a href="https://www.revespcardiol.org/es-factores-riesgo-cardiovascular-perspectivas-derivadas-articulo-13116658">Framingham Heart Study en Revista Española de Cardiología</a></li>
+      </ul>
+    </div>
+  </div>
+  <script>
+    function calculateRisk() {
+      const age = parseInt(document.getElementById("age").value);
+      const sex = document.getElementById("sex").value;
+      const systolic = parseInt(document.getElementById("systolic").value);
+      const diastolic = parseInt(document.getElementById("diastolic").value);
+      const cholesterol = parseInt(document.getElementById("cholesterol").value);
+      const hdl = parseInt(document.getElementById("hdl").value);
+      const smoker = document.getElementById("smoker").value;
+      const diabetes = document.getElementById("diabetes").value;
+
+      let riskScore = 0;
+
+      if (age >= 45) { riskScore += 1; }
+      if (sex === "male") { riskScore += 1; }
+      if (systolic >= 140) { riskScore += 2; } else if (systolic >= 130) { riskScore += 1; }
+      if (diastolic >= 90) { riskScore += 2; } else if (diastolic >= 80) { riskScore += 1; }
+      if (cholesterol >= 240) { riskScore += 2; } else if (cholesterol >= 200) { riskScore += 1; }
+      if (hdl < 40) { riskScore += 2; } else if (hdl < 60) { riskScore += 1; }
+      if (smoker === "yes") { riskScore += 2; }
+      if (diabetes === "yes") { riskScore += 2; }
+
+      let result = "";
+      let badgeClass = "";
+      let message = "";
+
+      if (riskScore <= 3) {
+        result = "Riesgo bajo";
+        badgeClass = "green";
+        message = "¡Felicidades! Estás en el camino correcto, pero recuerda que un riesgo bajo no significa que no puedas mejorar aún más.";
+      } else if (riskScore <= 6) {
+        result = "Riesgo moderado";
+        badgeClass = "orange";
+        message = "Tu riesgo cardiovascular es moderado. Es hora de hacer cambios. En VitalExtension podemos ayudarte.";
+      } else {
+        result = "Riesgo alto";
+        badgeClass = "red";
+        message = "Un riesgo alto indica que debes actuar ya. En VitalExtension trabajamos contigo para reducirlo con ciencia de vanguardia.";
+      }
+
+      document.getElementById("result").textContent = `Su riesgo cardiovascular es: ${result}`;
+      document.getElementById("badge").className = `badge ${badgeClass}`;
+      document.getElementById("badge").textContent = result;
+      document.getElementById("message").textContent = message;
+
+      // Scroll automático al resultado
+      document.getElementById("output").scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
