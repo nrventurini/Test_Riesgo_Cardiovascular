@@ -136,7 +136,23 @@
       .container { padding: 20px; }
       #lead-magnet input { width: 90%; }
     }
-  </style>
+  
+    .btn-email {
+      width: auto;
+      padding: 12px 20px;
+      font-size: 16px;
+      display: inline-block;
+      margin-top: 10px;
+      border-radius: 8px;
+    }
+    @media (max-width: 600px) {
+      .btn-email {
+        width: 100%;
+        font-size: 16px;
+      }
+    }
+
+</style>
 </head>
 <body>
   <div class="container">
@@ -164,11 +180,26 @@
       </div>
       <div id="lead-magnet">
         <p><strong>¿Quieres recibir una guía gratuita para reducir tu riesgo?</strong></p>
-        <input type="email" placeholder="Déjanos tu mejor email">
+        
+<input type="email" id="userEmail" placeholder="Déjanos tu mejor email">
+<button type="button" id="submitEmail" class="btn btn-email" onclick="enviarEmail()">
+  <span id="btnText">Enviar</span>
+  <span id="spinner" style="display:none; margin-left:10px;">⏳</span>
+</button>
+<p id="emailFeedback" style="color: red; display: none; margin-top: 10px;"></p>
+<button id="downloadBtn" class="btn" style="display:none; margin-top: 20px;" onclick="window.open('guia-longevidad.pdf', '_blank')">
+  📥 Descargar guía gratuita en PDF
+</button>
+
       
 <p style="font-size: 15px; color: #777; margin-top: 10px;">
   ⚖️ <strong>Compromiso VitalExtension:</strong> Usaremos tu email solo para enviarte tu guía gratuita y contenido valioso sobre longevidad. Nunca enviaremos spam ni compartiremos tus datos.
 </p>
+
+    
+<button id="downloadBtn" class="btn" style="display:none; margin-top: 20px;" onclick="window.open('guia-longevidad.pdf', '_blank')">
+  📥 Descargar guía gratuita en PDF
+</button>
 
     </div>
 
@@ -262,13 +293,41 @@
       }, 1000);
     }
   
-document.querySelector('#lead-magnet input').addEventListener('input', function(e) {
-  const email = e.target.value;
-  const downloadBtn = document.getElementById('downloadBtn');
-  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  downloadBtn.style.display = emailValid ? 'block' : 'none';
-});
 
-</script>
+
+
+
+
+function enviarEmail() {
+  const email = document.getElementById("userEmail").value;
+  const feedback = document.getElementById("emailFeedback");
+  const downloadBtn = document.getElementById("downloadBtn");
+  const btnText = document.getElementById("btnText");
+  const spinner = document.getElementById("spinner");
+  const submitBtn = document.getElementById("submitEmail");
+
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  if (!emailValid) {
+    feedback.textContent = "Por favor, revisa que el email sea válido.";
+    feedback.style.color = "red";
+    feedback.style.display = "block";
+    downloadBtn.style.display = "none";
+    return;
+  }feedback.style.color = "green";
+  feedback.textContent = "Enviando...";
+  feedback.style.display = "block";
+  btnText.textContent = "Enviando...";
+  spinner.style.display = "inline-block";
+  submitBtn.disabled = true;
+
+  setTimeout(() => {
+    feedback.textContent = "✔️ ¡Listo! Tu guía está lista para descargar.";
+    downloadBtn.style.display = "block";
+    btnText.textContent = "Enviar";
+    spinner.style.display = "none";
+    submitBtn.disabled = false;
+  }, 1200);
+}</script>
 </body>
 </html>
