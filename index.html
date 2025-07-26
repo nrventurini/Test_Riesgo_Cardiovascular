@@ -179,15 +179,44 @@
         <a href="https://www.vitalextension.com/servicios/" target="_blank" class="btn">Mejorar mi salud con VitalExtension</a>
       </div>
       <div id="lead-magnet">
-        <p><strong>¿Quieres recibir una guía gratuita para reducir tu riesgo?</strong></p>
+        <p><strong>¿Quieres recibir una guía gratuita con 7 claves científicas que ayudarán a reducir tu riesgo?</strong></p>
         
+
+<input type="text" id="userName" placeholder="Tu nombre (opcional)" style="margin-bottom: 10px;">
+<br>
 <input type="email" id="userEmail" placeholder="Déjanos tu mejor email">
+
+<!-- Pregunta CAPTCHA aleatoria -->
+<div style="margin-top: 12px;">
+  <label id="captchaPregunta" style="font-size: 14px;">Cargando pregunta seguridad...</label><br>
+  <input type="text" id="captchaRespuesta" style="margin-top: 4px; width: 60px;">
+</div>
+
+<!-- Honeypot (campo invisible para bots) -->
+<input type="text" id="campoTrampa" style="display: none;" autocomplete="off">
+
+
+<!-- Botón de envío -->
 <button type="button" id="submitEmail" class="btn btn-email" onclick="enviarEmail()">
   <span id="btnText">Enviar</span>
   <span id="spinner" style="display:none; margin-left:10px;">⏳</span>
 </button>
+
+
+
+<div style="margin-top: 12px; display: flex; align-items: center; font-size: 14px; color: #555;">
+  <label for="consentimientoRGPD" style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+    <input type="checkbox" id="consentimientoRGPD" style="width: 16px; height: 16px; margin: 0;">
+    <span>Acepto el tratamiento de mis datos conforme a la 
+      <a href="https://nrventurini.github.io/Pol-tica_privacidad/" target="_blank" style="color: #12517c;">Política de Privacidad</a>.
+    </span>
+  </label>
+</div>
+
+
+
 <p id="emailFeedback" style="color: red; display: none; margin-top: 10px;"></p>
-<button id="downloadBtn" class="btn" style="display:none; margin-top: 20px;" onclick="window.open('guia-longevidad.pdf', '_blank')">
+<button id="downloadBtn" class="btn" style="display:none; margin-top: 20px;" onclick="window.open('https://github.com/nrventurini/ebook_longevidad/raw/main/guia-longevidad.pdf', '_blank')">
   📥 Descargar guía gratuita en PDF
 </button>
 
@@ -195,11 +224,6 @@
 <p style="font-size: 15px; color: #777; margin-top: 10px;">
   ⚖️ <strong>Compromiso VitalExtension:</strong> Usaremos tu email solo para enviarte tu guía gratuita y contenido valioso sobre longevidad. Nunca enviaremos spam ni compartiremos tus datos.
 </p>
-
-    
-<button id="downloadBtn" class="btn" style="display:none; margin-top: 20px;" onclick="window.open('guia-longevidad.pdf', '_blank')">
-  📥 Descargar guía gratuita en PDF
-</button>
 
     </div>
 
@@ -219,6 +243,9 @@
   </div>
 
   <script>
+
+    let captchaActual = {};
+
     function calculateRisk() {
       const requiredFields = ['age', 'sex', 'systolic', 'diastolic', 'cholesterol', 'hdl', 'smoker', 'diabetes'];
       let valid = true;
@@ -290,21 +317,78 @@
           document.getElementById("lead-magnet").style.opacity = "1";
         }, 100);
 
+    
+      // Preguntas posibles y respuestas para Captcha
+     const preguntasCaptcha = [
+     { pregunta: "Pregunta de seguridad: ¿Cuánto es 3 + 5?", respuesta: "8" },
+     { pregunta: "Pregunta de seguridad: ¿Cuánto es 10 - 5?", respuesta: "5" },
+     { pregunta: "Pregunta de seguridad: ¿Cuánto es 2 + 5?", respuesta: "7" },
+     { pregunta: "Pregunta de seguridad: ¿Cuánto es 6 - 2?", respuesta: "4" },
+     { pregunta: "Pregunta de seguridad: ¿Cuánto es 3 x 2?", respuesta: "6" },
+     { pregunta: "Pregunta de seguridad: ¿Cuánto es 1 x 2?", respuesta: "2" },
+     { pregunta: "Pregunta de seguridad: ¿Cuánto es 1 + 0?", respuesta: "1" },
+     { pregunta: "Pregunta de seguridad: ¿Cuánto es 1 + 2?", respuesta: "3" },
+     { pregunta: "Pregunta de seguridad: ¿Cuánto es 6 + 3?", respuesta: "9" }
+     ];
+
+     // Elegir una al azar
+     captchaActual = preguntasCaptcha[Math.floor(Math.random() * preguntasCaptcha.length)];
+     document.getElementById("captchaPregunta").textContent = captchaActual.pregunta;
+
+
       }, 1000);
     }
-  
+ 
+function enviarResultadosAGoogleSheets(data) {
+  const formData = new FormData();
+  for (const key in data) {
+    formData.append(key, data[key]);
+  }
 
-
-
+  fetch("https://script.google.com/macros/s/AKfycbxiG6oK4N_KJ6p6t9vjfEe82Z-RNl77-doyQg4SHv630Jyr3bl6uXPlcMXjnIUhXZRv/exec", {
+    method: "POST",
+    body: formData
+  })
+  .then(response => response.text())
+  .then(text => console.log("✅ Datos enviados:", text))
+  .catch(error => console.error("❌ Error al enviar a Sheets:", error));
+}
 
 
 function enviarEmail() {
+  const name = document.getElementById("userName").value.trim();
   const email = document.getElementById("userEmail").value;
   const feedback = document.getElementById("emailFeedback");
   const downloadBtn = document.getElementById("downloadBtn");
   const btnText = document.getElementById("btnText");
   const spinner = document.getElementById("spinner");
   const submitBtn = document.getElementById("submitEmail");
+
+  // ✅ Validación RGPD
+  if (!document.getElementById("consentimientoRGPD").checked) {
+    feedback.textContent = "Debes aceptar la política de privacidad para continuar.";
+    feedback.style.color = "red";
+    feedback.style.display = "block";
+    return;
+  }
+
+ // Validar honeypot
+if (document.getElementById("campoTrampa").value !== "") {
+  feedback.textContent = "Detección de comportamiento automático.";
+  feedback.style.color = "red";
+  feedback.style.display = "block";
+  return;
+}
+
+ // Validar CAPTCHA
+ const captcha = document.getElementById("captchaRespuesta").value.trim();
+  if (captcha !== captchaActual.respuesta) {
+    feedback.textContent = "Respuesta incorrecta a la verificación. Intenta de nuevo.";
+    feedback.style.color = "red";
+    feedback.style.display = "block";
+    return;
+  }
+
 
   const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
@@ -314,12 +398,22 @@ function enviarEmail() {
     feedback.style.display = "block";
     downloadBtn.style.display = "none";
     return;
-  }feedback.style.color = "green";
-  feedback.textContent = "Enviando...";
-  feedback.style.display = "block";
-  btnText.textContent = "Enviando...";
-  spinner.style.display = "inline-block";
-  submitBtn.disabled = true;
+  }
+  
+    // Mostrar estado de envío
+    feedback.style.color = "green";
+    feedback.textContent = "Enviando...";
+    feedback.style.display = "block";
+    btnText.textContent = "Enviando...";
+    spinner.style.display = "inline-block";
+    submitBtn.disabled = true;
+
+  // ✅ Enviar datos a Google Sheets
+    enviarResultadosAGoogleSheets({
+     Nombre: name,
+     Email: email
+    });
+
 
   setTimeout(() => {
     feedback.textContent = "✔️ ¡Listo! Tu guía está lista para descargar.";
@@ -328,6 +422,8 @@ function enviarEmail() {
     spinner.style.display = "none";
     submitBtn.disabled = false;
   }, 1200);
+
+
 }</script>
 </body>
 </html>
